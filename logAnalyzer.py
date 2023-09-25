@@ -1,25 +1,30 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# path to log file
 log_path = 'part2.log'
 
+# open the log file and store it to dataframe
 df_log = pd.read_csv(log_path, sep='\t', header=None)
 
 # Define a regular expression pattern to extract the date and time
 date_pattern = r'(\w{3} \d{2} \d{2}:\d{2}:\d{2})'
-component_pattern = r'combo\s(.*?)\('
+component_pattern = r'combo\s(.*?)(?:\(|\[)'
 content_pattern = r':(.*$)'
 
-# Extract the date and time into a new column
+# Extract the date and time 
 df_log['Date_Time'] = df_log[0].str.extract(date_pattern)
 
-# Extract the component from the 4th column (index 3)
+# Extract the component 
 df_log['Component'] = df_log[0].str.extract(component_pattern)
 
+# Extract the content 
 df_log['Content'] = df_log[0].str.extract(content_pattern)
+
 
 # Get the top 3 components
 top_components = df_log['Component'].value_counts().head(3).index.tolist()
+print(top_components)
 
 # Convert the "Date_Time" column to a datetime object
 df_log['Date_Time'] = pd.to_datetime(df_log['Date_Time'], format='%b %d %H:%M:%S')
